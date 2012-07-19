@@ -253,6 +253,23 @@ public class ImporterDOT implements FileImporter, LongTask {
                     report.logIssue(new Issue(NbBundle.getMessage(ImporterDOT.class, "importerDOT_error_colorunreachable", streamTokenizer.lineno()), Issue.Level.WARNING));
                     streamTokenizer.pushBack();
                 }
+            } else if (streamTokenizer.sval.equalsIgnoreCase("height") || streamTokenizer.sval.equalsIgnoreCase("width")) {
+                streamTokenizer.nextToken();
+                if (streamTokenizer.ttype == '=') {
+                    streamTokenizer.nextToken();
+                    if (streamTokenizer.ttype == StreamTokenizer.TT_WORD || streamTokenizer.ttype == '"') {
+                        try {
+                            nodeDraft.setSize(Float.parseFloat(streamTokenizer.sval));
+                        } catch (Exception e) {
+                        }
+                    } else {
+                        report.logIssue(new Issue(NbBundle.getMessage(ImporterDOT.class, "importerDOT_error_posunreachable", streamTokenizer.lineno()), Issue.Level.WARNING));
+                        streamTokenizer.pushBack();
+                    }
+                } else {
+                    report.logIssue(new Issue(NbBundle.getMessage(ImporterDOT.class, "importerDOT_error_posunreachable", streamTokenizer.lineno()), Issue.Level.WARNING));
+                    streamTokenizer.pushBack();
+                }
             } else if (streamTokenizer.sval.equalsIgnoreCase("pos")) {
                 streamTokenizer.nextToken();
                 if (streamTokenizer.ttype == '=') {
